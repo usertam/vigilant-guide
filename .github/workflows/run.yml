@@ -1,5 +1,6 @@
 name: "Run"
 on:
+  push:
   workflow_dispatch:
 jobs:
   main:
@@ -14,8 +15,8 @@ jobs:
       with:
         name: ip
         path: ip.txt
-    - name: Stay alive for 30 seconds
-      run: sleep 30
+    - name: Listen for 30 seconds
+      run: nc -lvp 8000 & sleep 30 && pkill nc
 
   workers:
     name: Workers
@@ -32,4 +33,4 @@ jobs:
     - name: Report
       run: ip a
     - name: Ping
-      run: ping -w 20 $(<ip.txt)
+      run: nc $(<ip.txt) 8000 <<< "hi"
