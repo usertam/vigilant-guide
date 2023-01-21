@@ -7,7 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Report
-      run: ip a
+      run: |
+        ip a
+        ip a show eth0 | grep 'inet.*eth0' | grep -o '[0-9.]*' | head -1 > ip.txt
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ip
+        path: ip.txt
 
   workers:
     name: Workers
@@ -16,5 +22,12 @@ jobs:
       matrix:
         worker: [ 1, 2 ]
     steps:
+    - name: Wait 10 seconds
+      run: sleep 10
+    - uses: actions/download-artifact@v3
+      with:
+        name: ip
     - name: Report
       run: ip a
+    - name: Ping
+      run: ping -w 60 $(<ip.txt)
