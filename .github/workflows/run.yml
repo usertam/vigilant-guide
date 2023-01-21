@@ -1,0 +1,20 @@
+name: "Run"
+on:
+  workflow_dispatch:
+jobs:
+  main:
+    name: Main
+    runs-on: ubuntu-latest
+    steps:
+    - name: Report
+      run: ip a
+
+  workers:
+    name: Workers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        worker: [ 1, 2 ]
+    steps:
+    - name: Report
+      run: ip a
