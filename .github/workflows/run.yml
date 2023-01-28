@@ -9,28 +9,5 @@ jobs:
     steps:
     - name: Report
       run: |
-        ip a
-        ip a show eth0 | grep 'inet.*eth0' | grep -o '[0-9.]*' | head -1 > ip.txt
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ip
-        path: ip.txt
-    - name: Listen for 30 seconds
-      run: nc -lvp 8000 & sleep 30 && pkill nc
-
-  workers:
-    name: Workers
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        worker: [ 1, 2 ]
-    steps:
-    - name: Wait 10 seconds
-      run: sleep 10
-    - uses: actions/download-artifact@v3
-      with:
-        name: ip
-    - name: Report
-      run: ip a
-    - name: Ping
-      run: nc $(<ip.txt) 8000 <<< "hi"
+        pip3 install pynat
+        ~/.local/bin/pynat
